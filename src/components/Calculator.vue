@@ -25,30 +25,35 @@
           </div>
         </div>
         <div class="calculator__controls__actions">
-          <div class="btn btn--1-of-2 btn--orange" @click="enter">ENTER</div>
-          <div class="btn btn--1-of-4 btn--green" @click="reset">AC</div>
-          <div class="btn btn--1-of-4 btn--green" @click="clear">Clear</div>
+          <button class="btn btn--1-of-2 btn--orange" @click="enter">ENTER</button>
+          <button class="btn btn--1-of-4 btn--green" @click="reset">AC</button>
+          <button class="btn btn--1-of-4 btn--green" @click="clear">Clear</button>
         </div>
         <div class="calculator__controls__numbers">
           <div>
-            <div class="btn btn--1-of-3" data-value="0" @click="updateDisplayedValue">0</div>
-            <div class="btn btn--1-of-3" data-value="." @click="updateDisplayedValue">.</div>
-            <div class="btn btn--1-of-3" data-value="3.14" @click="updateDisplayedValue">PI</div>
-            <div
+            <button class="btn btn--1-of-3" data-value="0" @click="updateDisplayedValue">0</button>
+            <button class="btn btn--1-of-3" data-value="." @click="updateDisplayedValue">.</button>
+            <button class="btn btn--1-of-3" data-value="3.14" @click="updateDisplayedValue">PI</button>
+            <button
               v-for="(number,i) in numbers"
               class="btn btn--1-of-3"
               :data-value="number"
               @click="updateDisplayedValue"
               :key="i">{{number}}
-            </div>
+            </button>
           </div>
           <div>
-            <div class="btn btn--green" data-operation="/" @click="executeOperation">&divide;</div>
-            <div class="btn btn--green" data-operation="*" @click="executeOperation">&times;</div>
-            <div class="btn btn--green" data-operation="-" @click="executeOperation">&minus;</div>
-            <div class="btn btn--green" data-operation="+" @click="executeOperation">&plus;</div>
+            <button class="btn btn--green" data-operation="/" @click="executeOperation">&divide;</button>
+            <button class="btn btn--green" data-operation="*" @click="executeOperation">&times;</button>
+            <button class="btn btn--green" data-operation="-" @click="executeOperation">&minus;</button>
+            <button class="btn btn--green" data-operation="+" @click="executeOperation">&plus;</button>
           </div>
         </div>
+      </div>
+      <div class="calculator__note">
+        Note: In single line mode, digits and operators needs to be separated by a white space. <br>
+        Bad format examples: 12 12+ || 12+12 || 1212+<br>
+        Working example: 12 12 +
       </div>
     </div>
   </div>
@@ -81,9 +86,11 @@ export default {
       }
       let value = parseFloat(this.currentDisplayedValue);
       let valueLastChar = this.currentDisplayedValue.slice(-1);
+      // prevents the user from inserting a number that ends in a dot (ex: 5.)
       if (isNaN(value) || valueLastChar == '.') {
         return
       }
+      // if user inserts "0000" then the stack only gets pushed the value 0
       if (value === 0) {
         this.stack.push(0);
       } else {
@@ -139,16 +146,21 @@ export default {
       }
 
       let operationFn;
+      // retrieve the function from the operations object
       Object.keys(this.operations).map(item => {
         if (item === operation) {
           operationFn = this.operations[item];
         }
       });
+      // get last 2 elements in the stack
       let a = this.stack.pop();
       let b = this.stack.pop();
+      // execute function with params a,b and push result to stack
       this.stack.push(operationFn(a,b));
     },
     insertEquation(event) {
+      // only valid input values accepted are digits or operators (+ - * /)
+      // anything else will get deleted
       let lastValue = event.target.value.split('').pop();
       let rgx = /[\d*+-/ ]+/;
       if (!rgx.test(lastValue)) {
@@ -165,6 +177,8 @@ export default {
       this.temporaryStack = [];
       let equation = this.equation.trim().split(' ');
       equation.forEach(value => {
+        // if value is equal to an operation (+ - */)
+        // retrieve function from operators object, retrieve number of params and execute function
         if (this.operations[value]) {
           let operationFn = this.operations[value];
           let nrOfParams = operationFn.length; // returns the nr of params the function needs
@@ -174,11 +188,13 @@ export default {
           }
           this.temporaryStack.push(operationFn(...params));
         } else {
+          // since it's not an operation, push value to temporary stack
           this.temporaryStack.push(value);
         }
       });
       this.stack.length = 0; // reset stack
-      let result = parseFloat(this.temporaryStack.pop());
+      let result = this.temporaryStack.pop();
+      // any NaN result will reset the stack and return 0
       if (isNaN(result)) {
         result = "0";
       }
@@ -203,6 +219,11 @@ export default {
     border-radius: 10px;
     background-color: #000;
     overflow: hidden;
+    box-shadow: 0px 9px 22px -12px rgba(0,0,0,0.75);
+
+    &__note {
+      padding: 10px 18px;
+    }
 
     &__display {
       height: 250px;
@@ -290,6 +311,14 @@ export default {
         cursor: pointer;
         min-width: 80px;
         font-size: 20px;
+        color: #fff;
+        border: none;
+        outline: none;
+        transition: all .3s;
+
+        &:active {
+          transform: translateY(2px);
+        }
 
         &--1-of-2 {
           width: calc((100% / 2) - 16px);

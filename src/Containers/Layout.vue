@@ -2,16 +2,14 @@
   <div class="layout">
     <Header />
     <Calculator />
-    <Footer />
   </div>
 </template>
 <script>
   import Calculator from "../components/Calculator";
   import Header from "../components/Header";
-  import Footer from "../components/Footer";
   export default {
     name: 'Layout',
-    components: {Footer, Header, Calculator}
+    components: {Header, Calculator}
   }
 </script>
 
@@ -19,5 +17,6 @@
   .layout {
     width: 100vw;
     height: 100vh;
+    background-color: #fafafa;
   }
 </style>

@@ -28,6 +28,34 @@ The calculator is able to execute the 4 basic operators in two ways, multiple li
 0
 ```
 
+## Negatives and Floats
+```
+> -3
+-3.0
+> -2
+-2.0
+> *
+6.0
+> 5
+5.0
+> +
+11.0
+```
+
+## Floats and Division
+```
+> 5
+5
+> 9
+9
+> 1
+1
+> -
+8
+> /
+0.625
+```
+
 **Some of the things I would have done differently given I had the time**
   * Use scss mixins / includes / functions / variables for future use in different components
   * Break the calculator into multiple components if some of the pieces turn out to be needed somewhere else

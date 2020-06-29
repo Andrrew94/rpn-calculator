@@ -60,6 +60,7 @@ The calculator is able to execute the 4 basic operators in two ways, multiple li
   * Use scss mixins / includes / functions / variables for future use in different components
   * Break the calculator into multiple components if some of the pieces turn out to be needed somewhere else
   * Better validation and error handling, use a more complex regex for the user input
+  * Responsive and pixel perfect design
 
 
 ## Project setup
